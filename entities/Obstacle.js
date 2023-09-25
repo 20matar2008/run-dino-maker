@@ -7,6 +7,7 @@ class Obstacle extends GameObject {
     this.setStyles('bottom', globalThis.ground.getStyles('height') + 'px');
     this.setStyles('right', -this.getStyles('width') + 'px');
     setTimeout(() => this.move(), firstRespawnTime);
+    this.colidingAction = () => {};
   }
   
   move () {
@@ -26,6 +27,10 @@ class Obstacle extends GameObject {
   stop () {
     clearInterval(this.moveIntervalReference);
   }
+
+  addColidingAction(action) {
+    this.colidingAction = action;
+  }
   
   isColidingWithPlayer() {
     let playerColidingNumber;
@@ -33,7 +38,7 @@ class Obstacle extends GameObject {
     const isColiding = globalThis.players.some((player, playerNum) => {
       if (player.isColiding(this)) {
         playerColidingNumber = playerNum + 1;
-        console.log("Colidinho com player " + playerColidingNumber);
+        this.colidingAction();
         return true;
       }
     });
